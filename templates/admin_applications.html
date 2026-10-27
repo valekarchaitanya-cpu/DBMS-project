@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtEase | Admin Applications</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f6fb;
+            color: #202943;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        header a { color: white; text-decoration: none; }
+
+        main { max-width: 1100px; margin: 35px auto; padding: 0 20px; }
+
+        h1 { margin-bottom: 8px; }
+        .muted { color: #64748b; line-height: 1.5; }
+
+        .application {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            box-shadow: 0 4px 18px rgba(0,0,0,.05);
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        h2 { margin: 0 0 12px; font-size: 21px; }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #e0e7ff;
+            color: #3730a3;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .details { line-height: 1.7; margin-top: 18px; }
+        .description { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+        .empty, .message {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .message { background: #eff6ff; }
+
+        @media (max-width: 600px) {
+            main { margin-top: 24px; }
+            .application { padding: 18px; }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <a href="{{ url_for('home') }}"><strong>⚖ CourtEase Admin</strong></a>
+    <a href="{{ url_for('home') }}">← Dashboard</a>
+</header>
+
+<main>
+    <h1>Case Applications</h1>
+    <p class="muted">
+        Review client submissions and track their current status.
+    </p>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    {% if applications %}
+        {% for application in applications %}
+            <article class="application">
+                <div class="top">
+                    <div>
+                        <h2>{{ application.application_title }}</h2>
+                        <p class="muted">
+                            Reference:
+                            CE-{{ "%06d"|format(application.application_id) }}
+                        </p>
+                    </div>
+
+                    <span class="status">
+                        {{ application.application_status }}
+                    </span>
+                </div>
+
+                <div class="details">
+                    <p><strong>Applicant:</strong> {{ application.client_name }}</p>
+                    <p><strong>Email:</strong> {{ application.client_email or 'Not provided' }}</p>
+                    <p><strong>Phone:</strong> {{ application.client_phone or 'Not provided' }}</p>
+                    <p><strong>Case type:</strong> {{ application.case_type }}</p>
+                    <p><strong>Submitted:</strong>
+                        {{ application.submitted_at.strftime('%d %b %Y, %I:%M %p') if application.submitted_at else 'Not available' }}
+                    </p>
+                    <p><strong>Description:</strong></p>
+                    <p class="description">{{ application.description }}</p>
+                </div>
+
+               
+{% if application.application_status == 'Pending' %}
+    <p class="muted">
+        Review this application before making a decision.
+    </p>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:18px;">
+        <form method="POST"
+              action="{{ url_for('review_application', application_id=application.application_id) }}"
+              onsubmit="return confirm('Approve this application?');">
+            <input type="hidden" name="decision" value="Approved">
+            <button type="submit"
+                    style="background:#15803d; color:white; border:0;
+                           padding:11px 18px; border-radius:8px;
+                           cursor:pointer; font-weight:600;">
+                ✓ Accept
+            </button>
+        </form>
+
+        <form method="POST"
+              action="{{ url_for('review_application', application_id=application.application_id) }}"
+              onsubmit="return confirm('Reject this application?');">
+            <input type="hidden" name="decision" value="Rejected">
+            <button type="submit"
+                    style="background:#b91c1c; color:white; border:0;
+                           padding:11px 18px; border-radius:8px;
+                           cursor:pointer; font-weight:600;">
+                ✕ Reject
+            </button>
+        </form>
+    </div>
+{% endif %}
+
+            </article>
+        {% endfor %}
+    {% else %}
+        <section class="empty">
+            <h2>No applications found</h2>
+            <p class="muted">
+                New client submissions will appear here automatically.
+            </p>
+        </section>
+    {% endif %}
+</main>
+</body>
+</html>

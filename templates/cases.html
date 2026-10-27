@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtEase | Cases</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f6fb;
+            color: #202943;
+        }
+
+        header {
+            background: #17223f;
+            color: white;
+            padding: 22px 30px;
+        }
+
+        header h1 { margin: 0 0 6px; }
+        header p { margin: 0; color: #bdc8df; }
+
+        main { padding: 30px; }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        input, select {
+            padding: 12px 14px;
+            border: 1px solid #dce2ee;
+            border-radius: 9px;
+            background: white;
+            font-size: 14px;
+        }
+
+        input { flex: 1; min-width: 220px; }
+
+        .count {
+            margin-bottom: 16px;
+            color: #78839a;
+            font-size: 14px;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 14px;
+            padding: 18px;
+            overflow-x: auto;
+            border: 1px solid #e9edf5;
+        }
+
+        table {
+            width: 100%;
+            min-width: 750px;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 14px 12px;
+            color: #78839a;
+            font-size: 12px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #e9edf5;
+        }
+
+        td {
+            padding: 16px 12px;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f2f7;
+        }
+
+        .case-number {
+            color: #4167d9;
+            font-weight: 650;
+        }
+
+        .status {
+            display: inline-block;
+            border-radius: 20px;
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .Pending { background: #fff2dc; color: #a46a0b; }
+        .progress { background: #e9efff; color: #3559c7; }
+        .Closed { background: #e2f7ee; color: #16845d; }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 22px;
+            color: #4167d9;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            main { padding: 16px; }
+            header { padding: 20px 16px; }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>⚖ CourtEase — Cases</h1>
+        <p>Search and review registered demo cases.</p>
+    </header>
+
+    <main>
+        <a class="back" href="/">← Back to Dashboard</a>
+
+        <div class="toolbar">
+            <input
+                type="search"
+                id="searchInput"
+                placeholder="Search case number, title, client or lawyer..."
+                aria-label="Search cases"
+            >
+
+            <select id="statusFilter" aria-label="Filter by status">
+                <option value="">All statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Closed">Closed</option>
+            </select>
+        </div>
+
+        <p class="count" id="caseCount">Loading cases...</p>
+
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Case Number</th>
+                        <th>Title</th>
+                        <th>Client</th>
+                        <th>Lawyer</th>
+                        <th>Case Type</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody id="casesTable">
+                    {% for case in cases %}
+                    <tr>
+                        <td class="case-number">{{ case.case_number }}</td>
+                        <td>{{ case.title }}</td>
+                        <td>{{ case.client_name }}</td>
+                        <td>{{ case.lawyer_name }}</td>
+                        <td>{{ case.case_type }}</td>
+                        <td>
+                            {% if case.status == 'Pending' %}
+                                <span class="status Pending">Pending</span>
+                            {% elif case.status == 'In Progress' %}
+                                <span class="status progress">In Progress</span>
+                            {% else %}
+                                <span class="status Closed">Closed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <p id="noResults" hidden>No matching cases found.</p>
+        </div>
+    </main>
+
+   
+<script>
+    const searchInput = document.getElementById("searchInput");
+    const statusFilter = document.getElementById("statusFilter");
+    const tableBody = document.getElementById("casesTable");
+    const countLabel = document.getElementById("caseCount");
+    const noResults = document.getElementById("noResults");
+
+    function filterCases() {
+        const searchText = searchInput.value.toLowerCase().trim();
+        const selectedStatus = statusFilter.value;
+        const rows = tableBody.querySelectorAll("tr");
+        let visibleCount = 0;
+
+        rows.forEach(function(row) {
+            const rowText = row.innerText.toLowerCase();
+            const rowStatus = row.cells[5]
+                ? row.cells[5].innerText.trim()
+                : "";
+
+            const matchesSearch = rowText.includes(searchText);
+            const matchesStatus =
+                selectedStatus === "" || rowStatus === selectedStatus;
+
+            if (matchesSearch && matchesStatus) {
+                row.hidden = false;
+                visibleCount++;
+            } else {
+                row.hidden = true;
+            }
+        });
+
+        countLabel.textContent =
+            "Showing " + visibleCount + " of " + rows.length + " cases";
+
+        noResults.hidden = visibleCount > 0;
+    }
+
+    searchInput.addEventListener("input", filterCases);
+    statusFilter.addEventListener("change", filterCases);
+
+    filterCases();
+</script>
+
+</body>
+</html>

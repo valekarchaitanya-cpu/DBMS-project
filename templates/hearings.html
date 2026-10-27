@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtEase - Hearings</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            margin: 0;
+            padding: 30px;
+            color: #202b45;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .back-link {
+            color: #3156a3;
+            text-decoration: none;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+            color: #172442;
+        }
+
+        .subtitle {
+            color: #68738a;
+            margin-top: 0;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(20, 35, 65, 0.05);
+            overflow-x: auto;
+        }
+
+        .summary {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #68738a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #e5e8ef;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f0f3f9;
+            color: #384663;
+        }
+
+        tbody tr:hover {
+            background: #f8faff;
+        }
+
+        .case-number {
+            font-weight: bold;
+            color: #3156a3;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: #e9efff;
+            color: #3156a3;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .empty {
+            text-align: center;
+            color: #68738a;
+            padding: 25px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <div>
+            <h1>Hearings</h1>
+            <p class="subtitle">View scheduled court hearings and related case details.</p>
+        </div>
+
+        <a class="back-link" href="/">← Back to Dashboard</a>
+    </div>
+
+    <div class="card">
+        <p class="summary">
+            Total hearing records: {{ hearings|length }}
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Case Number</th>
+                    <th>Case Title</th>
+                    <th>Hearing Date</th>
+                    <th>Time</th>
+                    <th>Courtroom</th>
+                    <th>Judge</th>
+                    <th>Case Status</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for hearing in hearings %}
+                <tr>
+                    <td class="case-number">
+                        {{ hearing.case_number }}
+                    </td>
+
+                    <td>{{ hearing.case_title }}</td>
+                    <td>{{ hearing.hearing_date }}</td>
+                    <td>{{ hearing.hearing_time or 'Not set' }}</td>
+                    <td>{{ hearing.court_room or 'Not assigned' }}</td>
+                    <td>{{ hearing.judge_name or 'Not assigned' }}</td>
+                    <td>
+                        <span class="status">
+                            {{ hearing.case_status }}
+                        </span>
+                    </td>
+                    <td>{{ hearing.remarks or 'No remarks' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="empty">
+                        No hearing records found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

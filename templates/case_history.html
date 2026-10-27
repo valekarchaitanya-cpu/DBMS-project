@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtEase - Case History</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 28px;
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: auto;
+        }
+
+        .back {
+            color: #4338ca;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 22px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 22px;
+            box-shadow: 0 3px 12px #0000000b;
+        }
+
+        .muted { color: #64748b; }
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 20px;
+            margin-top: 22px;
+        }
+
+        .label {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .value { font-weight: 600; }
+
+        .timeline {
+            position: relative;
+            margin-top: 24px;
+            padding-left: 28px;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 7px;
+            top: 6px;
+            bottom: 6px;
+            width: 2px;
+            background: #dbe3f0;
+        }
+
+        .event {
+            position: relative;
+            padding: 0 0 26px 12px;
+        }
+
+        .event:last-child { padding-bottom: 0; }
+
+        .dot {
+            position: absolute;
+            left: -27px;
+            top: 3px;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #4f46e5;
+            border: 3px solid #e0e7ff;
+        }
+
+        .event-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .change {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .tag {
+            display: inline-block;
+            border-radius: 6px;
+            padding: 5px 9px;
+            background: #e0e7ff;
+            color: #3730a3;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 16px; }
+            .card { padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <a class="back" href="{{ url_for('home') }}">
+        ← Back to Dashboard
+    </a>
+
+    <section class="card">
+        <p class="muted">COURTEASE / CASE HISTORY</p>
+        <h1>{{ case.case_number }}</h1>
+        <h2>{{ case.title }}</h2>
+        <span class="tag">{{ case.status }}</span>
+
+        <div class="details">
+            <div>
+                <div class="label">Client</div>
+                <div class="value">{{ case.client_name }}</div>
+            </div>
+            <div>
+                <div class="label">Case type</div>
+                <div class="value">{{ case.case_type }}</div>
+            </div>
+            <div>
+                <div class="label">Assigned lawyer</div>
+                <div class="value">{{ case.lawyer_name or 'Not assigned' }}</div>
+            </div>
+            <div>
+                <div class="label">Assigned judge</div>
+                <div class="value">{{ case.judge_name or 'Not assigned' }}</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Case Activity Timeline</h2>
+        <p class="muted">Recorded changes to this case, newest first.</p>
+
+        {% if history %}
+        <div class="timeline">
+            {% for item in history %}
+            <div class="event">
+                <div class="dot"></div>
+                <div class="event-title">
+                    {{ item.field_name | replace('_', ' ') | title }} updated
+                </div>
+                <div class="muted">
+                    {{ item.changed_at }}
+                    {% if item.changed_by_name %}
+                        · Recorded user: {{ item.changed_by_name }}
+                    {% endif %}
+                </div>
+                <div class="change">
+                    <div>
+                        <span class="muted">Previous:</span>
+                        {{ item.old_value if item.old_value is not none else 'Not assigned' }}
+                    </div>
+                    <div style="margin-top: 6px;">
+                        <span class="muted">New:</span>
+                        {{ item.new_value if item.new_value is not none else 'Not assigned' }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No audit events have been recorded for this case yet.</p>
+        {% endif %}
+    </section>
+
+    <section class="card">
+        <h2>Hearing Schedule</h2>
+
+        {% if hearings %}
+            {% for hearing in hearings %}
+            <div class="change" style="margin-bottom: 12px;">
+                <strong>
+                    {{ hearing.hearing_date }} at
+                    {{ hearing.hearing_time or 'Time not set' }}
+                </strong>
+                <p>
+                    <span class="muted">Courtroom:</span>
+                    {{ hearing.court_room or 'Not assigned' }}
+                </p>
+                {% if hearing.remarks %}
+                <p>{{ hearing.remarks }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No hearing has been scheduled yet.</p>
+        {% endif %}
+    </section>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtEase - Admin Case Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #1f2937;
+            margin: 0;
+            padding: 28px;
+        }
+        h1 { margin-bottom: 8px; }
+        .subtitle { color: #64748b; margin-bottom: 24px; }
+        .case-card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 18px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px #0000000d;
+        }
+        .details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+        .label { color: #64748b; font-size: 13px; }
+        .value { font-weight: bold; margin-top: 5px; }
+        .status {
+            display: inline-block;
+            background: #e0e7ff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        a { color: #4338ca; text-decoration: none; }
+        .top-link { display: inline-block; margin-bottom: 22px; }
+    </style>
+</head>
+<body>
+    <a class="top-link" href="{{ url_for('home') }}">← Back to Dashboard</a>
+
+    <h1>Admin Case Management</h1>
+    <p class="subtitle">
+        View all registered cases and their current assignments.
+    </p>
+
+    {% for case in cases %}
+    <section class="case-card">
+        <h2>{{ case.case_number }} — {{ case.title }}</h2>
+        <span class="status">{{ case.status }}</span>
+
+        <div class="details">
+            <div>
+                <div class="label">Client</div>
+                <div class="value">{{ case.client_name }}</div>
+            </div>
+            <div>
+                <div class="label">Case type</div>
+                <div class="value">{{ case.case_type }}</div>
+            </div>
+            <div>
+                <div class="label">Assigned lawyer</div>
+                <div class="value">
+                    {{ case.lawyer_name or 'Not assigned' }}
+                </div>
+            </div>
+            <div>
+                <div class="label">Assigned judge</div>
+                <div class="value">
+                    {{ case.judge_name or 'Not assigned' }}
+                </div>
+            </div>
+        </div>
+        
+        <hr style="margin-top: 22px; border: 0; border-top: 1px solid #e5e7eb;">
+
+        <h3>Manage Case</h3>
+
+        <form method="POST"
+              action="{{ url_for('update_case_management', case_id=case.case_id) }}">
+
+            <label for="lawyer-{{ case.case_id }}">Assign Lawyer</label>
+            <select id="lawyer-{{ case.case_id }}"
+                    name="lawyer_id" required
+                    style="display:block; width:100%; padding:10px; margin:8px 0 16px;">
+                {% for lawyer in lawyers %}
+                <option value="{{ lawyer.lawyer_id }}"
+                    {% if lawyer.lawyer_id == case.lawyer_id %}selected{% endif %}>
+                    {{ lawyer.full_name }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <label for="judge-{{ case.case_id }}">Assign Judge</label>
+            <select id="judge-{{ case.case_id }}"
+                    name="judge_id"
+                    style="display:block; width:100%; padding:10px; margin:8px 0 16px;">
+                <option value="">Not assigned</option>
+                {% for judge in judges %}
+                <option value="{{ judge.judge_id }}"
+                    {% if judge.judge_id == case.judge_id %}selected{% endif %}>
+                    {{ judge.full_name }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <label for="status-{{ case.case_id }}">Case Status</label>
+            <select id="status-{{ case.case_id }}"
+                    name="status" required
+                    style="display:block; width:100%; padding:10px; margin:8px 0 16px;">
+                {% for option in ['Pending', 'In Progress', 'Closed'] %}
+                <option value="{{ option }}"
+                    {% if option == case.status %}selected{% endif %}>
+                    {{ option }}
+                </option>
+                {% endfor %}
+            </select>
+
+            
+            <label for="courtroom-{{ case.case_id }}">Courtroom Number</label>
+            <input
+                type="text"
+                id="courtroom-{{ case.case_id }}"
+                name="court_room"
+                placeholder="e.g. Courtroom 4"
+                style="display:block; width:100%; padding:10px; margin:8px 0 16px;"
+            >
+
+            <label for="hearing-date-{{ case.case_id }}">Next Hearing Date</label>
+            <input
+                type="date"
+                id="hearing-date-{{ case.case_id }}"
+                name="hearing_date"
+                style="display:block; width:100%; padding:10px; margin:8px 0 16px;"
+            >
+
+            <label for="hearing-time-{{ case.case_id }}">Next Hearing Time</label>
+            <input
+                type="time"
+                id="hearing-time-{{ case.case_id }}"
+                name="hearing_time"
+                style="display:block; width:100%; padding:10px; margin:8px 0 16px;"
+            >
+
+
+            <button type="submit"
+                    style="background:#4338ca; color:white; border:0;
+                           padding:12px 18px; border-radius:8px; cursor:pointer;">
+                Save Changes
+            </button>
+        </form>
+
+    </section>
+    {% else %}
+    <p>No cases found.</p>
+    {% endfor %}
+</body>
+</html>

@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Lawyer | CourtEase</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 35px 20px;
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: #ffffff;
+            padding: 32px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #37358b;
+            font-size: 36px;
+        }
+
+        h2 {
+            margin-top: 35px;
+            color: #37358b;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+
+        .flash-message {
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            background: #fef2f2;
+            color: #991b1b;
+            border-radius: 8px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: 2px solid #c7d2fe;
+            border-color: #4338ca;
+        }
+
+        .submit-btn {
+            margin-top: 22px;
+            padding: 13px 22px;
+            background: #4338ca;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #3730a3;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #eef2ff;
+            color: #37358b;
+        }
+
+        tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 28px;
+            color: #4338ca;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 29px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>⚖️ Add Lawyer</h1>
+    <p class="subtitle">
+        Register and manage lawyers in the CourtEase system.
+    </p>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="full_name">Full Name *</label>
+                <input id="full_name" name="full_name"
+                       maxlength="100" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input id="phone" name="phone"
+                       maxlength="20">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input id="email" name="email"
+                       type="email" maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label for="specialization">Specialization</label>
+                <input id="specialization" name="specialization"
+                       maxlength="100"
+                       placeholder="e.g. Civil Law">
+            </div>
+        </div>
+
+        <button class="submit-btn" type="submit">
+            + Save Lawyer
+        </button>
+    </form>
+
+    <h2>Registered Lawyers</h2>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Specialization</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for lawyer in lawyers %}
+                <tr>
+                    <td>{{ lawyer.lawyer_id }}</td>
+                    <td>{{ lawyer.full_name }}</td>
+                    <td>{{ lawyer.phone or '-' }}</td>
+                    <td>{{ lawyer.email or '-' }}</td>
+                    <td>{{ lawyer.specialization or '-' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">No lawyers registered yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a class="back-link" href="{{ url_for('home') }}">
+        ← Back to Dashboard
+    </a>
+
+</div>
+</body>
+</html>

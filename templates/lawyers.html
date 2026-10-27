@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CourtEase - Lawyers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            padding: 30px;
+            color: #202b45;
+        }
+        h1 { color: #172442; }
+        a { color: #3156a3; text-decoration: none; }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #e5e8ef;
+        }
+        th { background: #f0f3f9; }
+    </style>
+</head>
+<body>
+    <a href="/">← Back to Dashboard</a>
+    <h1>Lawyers</h1>
+    <p>View lawyer information registered in CourtEase.</p>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Specialization</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lawyer in lawyers %}
+                <tr>
+                    <td>{{ lawyer.lawyer_id }}</td>
+                    <td>{{ lawyer.full_name }}</td>
+                    <td>{{ lawyer.phone or 'Not provided' }}</td>
+                    <td>{{ lawyer.email or 'Not provided' }}</td>
+                    <td>{{ lawyer.specialization or 'General' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">No lawyers found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

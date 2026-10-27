@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtEase | My Applications</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f6fb;
+            color: #202943;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        header a { color: white; text-decoration: none; }
+
+        main { max-width: 1050px; margin: 35px auto; padding: 0 20px; }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        h1 { margin: 0 0 8px; }
+        .muted { color: #64748b; line-height: 1.5; }
+
+        .button {
+            display: inline-block;
+            background: #1d4ed8;
+            color: white;
+            padding: 11px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .application {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 18px rgba(0,0,0,.05);
+        }
+
+        .application h2 { font-size: 20px; margin: 0 0 12px; }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            background: #e0e7ff;
+            color: #3730a3;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .details { margin-top: 15px; line-height: 1.7; }
+        .description { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+        .empty {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        footer { margin-top: 22px; font-size: 13px; color: #64748b; }
+    </style>
+</head>
+
+<body>
+<header>
+    <a href="{{ url_for('home') }}"><strong>⚖ CourtEase</strong></a>
+    <a href="{{ url_for('home') }}">← Dashboard</a>
+</header>
+
+<main>
+    <div class="top">
+        <div>
+            <h1>My Applications</h1>
+            <p class="muted">Track the applications submitted through CourtEase.</p>
+        </div>
+        <a class="button" href="{{ url_for('submit_case') }}">+ New Application</a>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <div class="application">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    {% if applications %}
+        {% for application in applications %}
+            <article class="application">
+                <h2>{{ application.application_title }}</h2>
+
+                <span class="status">
+                    {{ application.application_status }}
+                </span>
+
+                <div class="details">
+                    <p><strong>Application Reference:</strong>
+                        CE-{{ "%06d"|format(application.application_id) }}
+                    </p>
+                    <p><strong>Case Type:</strong>
+                        {{ application.case_type }}
+                    </p>
+                    <p><strong>Submitted:</strong>
+                        {{ application.submitted_at.strftime('%d %b %Y, %I:%M %p') if application.submitted_at else 'Not available' }}
+                    </p>
+                    <p><strong>Last Reviewed:</strong>
+                        {{ application.reviewed_at.strftime('%d %b %Y, %I:%M %p') if application.reviewed_at else 'Awaiting review' }}
+                    </p>
+                    <p><strong>Description:</strong></p>
+                    <p class="description">{{ application.description }}</p>
+                </div>
+            </article>
+        {% endfor %}
+    {% else %}
+        <section class="empty">
+            <h2>No applications yet</h2>
+            <p class="muted">Your submitted applications will appear here.</p>
+            <br>
+            <a class="button" href="{{ url_for('submit_case') }}">Submit Your First Application</a>
+        </section>
+    {% endif %}
+
+    <footer>
+        A submitted application is not an officially accepted court case until authorized staff review it.
+    </footer>
+</main>
+</body>
+</html>

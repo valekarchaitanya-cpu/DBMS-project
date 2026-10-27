@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtEase - Register</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f4fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .register-card {
+            background: white;
+            width: 100%;
+            max-width: 430px;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(20, 35, 65, 0.10);
+        }
+
+        h1 {
+            color: #172442;
+            margin: 0 0 8px;
+        }
+
+        .subtitle {
+            color: #68738a;
+            margin-bottom: 26px;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 7px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #34415c;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d7ddeb;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: 2px solid #9bb7ff;
+            border-color: #3156a3;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 24px;
+            background: #233d73;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #172b54;
+        }
+
+        .login-link {
+            margin-top: 20px;
+            text-align: center;
+            color: #68738a;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #3156a3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .message {
+            background: #fff0f0;
+            color: #a12626;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-card">
+        <h1>Create Account</h1>
+        <p class="subtitle">
+            Join CourtEase to manage your account securely.
+        </p>
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="/register">
+            <label for="username">Username</label>
+            <input
+                type="text"
+                id="username"
+                name="username"
+                minlength="3"
+                maxlength="50"
+                autocomplete="username"
+                required
+            >
+
+            
+        <label for="full_name">Full Name</label>
+        <input type="text" id="full_name" name="full_name" maxlength="100" autocomplete="name" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" autocomplete="email" required>
+
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" maxlength="20" autocomplete="tel" required>
+
+            
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                minlength="8"
+                autocomplete="new-password"
+                required
+            >
+
+            <button type="submit">Create Account</button>
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a href="/login">Log in</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtEase - Judges</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            margin: 0;
+            padding: 30px;
+            color: #202b45;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            color: #172442;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #68738a;
+            margin-top: 0;
+        }
+
+        a {
+            color: #3156a3;
+            text-decoration: none;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(20, 35, 65, 0.05);
+            overflow-x: auto;
+        }
+
+        .summary {
+            color: #68738a;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e8ef;
+        }
+
+        th {
+            background: #f0f3f9;
+            color: #384663;
+        }
+
+        tbody tr:hover {
+            background: #f8faff;
+        }
+
+        .judge-id {
+            color: #3156a3;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            color: #68738a;
+            padding: 25px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <div>
+            <h1>Judges</h1>
+            <p class="subtitle">
+                View judge information registered in CourtEase.
+            </p>
+        </div>
+
+        <a href="/">← Back to Dashboard</a>
+    </div>
+
+    <div class="card">
+        <p class="summary">
+            Total judges: {{ judges|length }}
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Judge ID</th>
+                    <th>Full Name</th>
+                    <th>Court Name</th>
+                    <th>Designation</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for judge in judges %}
+                <tr>
+                    <td class="judge-id">{{ judge.judge_id }}</td>
+                    <td>{{ judge.full_name }}</td>
+                    <td>{{ judge.court_name }}</td>
+                    <td>{{ judge.designation }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="empty">
+                        No judges found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtEase | Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f6fb;
+            color: #202943;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 235px;
+            background: #17223f;
+            color: white;
+            padding: 28px 18px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 25px;
+            font-weight: 750;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            color: #aab5d0;
+            font-size: 11px;
+            margin-bottom: 38px;
+            letter-spacing: 1px;
+        }
+
+        .nav-label {
+            color: #8492b4;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            margin: 22px 10px 12px;
+        }
+
+        .nav-link {
+            display: block;
+            text-decoration: none;
+            color: #d4dced;
+            padding: 13px 12px;
+            border-radius: 9px;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #394b78;
+            color: white;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 32px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .topbar h1 {
+            font-size: 29px;
+            margin-bottom: 8px;
+        }
+
+        .muted {
+            color: #78839a;
+            font-size: 14px;
+        }
+
+        .workspace {
+            background: white;
+            border: 1px solid #e5e9f2;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 13px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e9edf5;
+            border-radius: 15px;
+            padding: 22px;
+            box-shadow: 0 4px 16px rgba(27, 42, 78, 0.04);
+        }
+
+        .card-label {
+            color: #78839a;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .number {
+            font-size: 34px;
+            font-weight: 750;
+        }
+
+        .blue { border-top: 4px solid #5275ed; }
+        .orange { border-top: 4px solid #f0a54a; }
+        .purple { border-top: 4px solid #9971e8; }
+        .green { border-top: 4px solid #36b58a; }
+
+        .table-card {
+            background: white;
+            border: 1px solid #e9edf5;
+            border-radius: 15px;
+            padding: 24px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            min-width: 650px;
+        }
+
+        th {
+            color: #78839a;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 12px;
+            border-bottom: 1px solid #e9edf5;
+        }
+
+        td {
+            padding: 16px 12px;
+            font-size: 13px;
+            border-bottom: 1px solid #f0f2f7;
+        }
+
+        .case-no {
+            color: #4167d9;
+            font-weight: 650;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .status-pending {
+            background: #fff2dc;
+            color: #a46a0b;
+        }
+
+        .status-progress {
+            background: #e9efff;
+            color: #3559c7;
+        }
+
+        .status-closed {
+            background: #e2f7ee;
+            color: #16845d;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #78839a;
+        }
+
+        @media (max-width: 1000px) {
+            .cards {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 650px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .main {
+                padding: 20px 14px;
+            }
+
+            .cards {
+                gap: 10px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .number {
+                font-size: 27px;
+            }
+
+            .topbar h1 {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="brand">⚖ CourtEase</div>
+        <div class="tagline">SMART COURT MANAGEMENT</div>
+
+        <div class="nav-label">WORKSPACE</div>
+        <a href="/" class="nav-link active">▦ &nbsp; Dashboard</a>
+        <a href="/cases" class="nav-link">▤ &nbsp; Cases</a>
+        <a href="/clients" class="nav-link">♙ &nbsp; Clients</a>
+        <a href="/lawyers" class="nav-link">⚖ &nbsp; Lawyers</a>
+        <a href="/judges" class="nav-link">♙ &nbsp; Judges</a>
+        <a href="/hearings" class="nav-link">▦ &nbsp; Hearings</a>
+        <a href="/register" class="nav-link">＋ &nbsp; Register</a>
+
+        <div class="nav-label">SYSTEM</div>
+
+        
+{% if role == 'admin' %}
+<a href="{{ url_for('admin_applications') }}" class="nav-link">
+    📋 &nbsp; Admin Applications
+</a>
+{% endif %}
+
+{% if role == 'admin' %}
+<a href="{{ url_for('admin_case_management') }}" class="nav-link">
+    ⚖️ &nbsp; Case Management
+</a>
+{% endif %}
+
+
+<a href="{{ url_for('add_lawyer') }}" class="nav-link">
+    ⚖️ &nbsp; Add Lawyer
+</a>
+
+<a href="{{ url_for('add_judge') }}" class="nav-link">
+    👨‍⚖️ &nbsp; Add Judge
+</a>
+
+
+        <a href="#" class="nav-link">⚙ &nbsp; Settings</a>
+        
+<a href="{{ url_for('submit_case') }}" class="nav-link">
+    📝 &nbsp; Submit New Case
+</a>
+
+<a href="{{ url_for('my_applications') }}" class="nav-link">
+    📂 &nbsp; My Applications
+</a>
+
+        <a href="{{ url_for('logout') }}" class="nav-link">
+    🚪 &nbsp; Logout
+</a>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div>
+                <h1>Dashboard</h1>
+                <p class="muted">
+                    Welcome to your CourtEase workspace.
+                </p>
+            </div>
+            <div class="workspace">Demo Workspace</div>
+        </header>
+
+        <h2 class="section-title">Case Overview</h2>
+
+        <section class="cards">
+            <div class="card blue">
+                <div class="card-label">Total Cases</div>
+                <div class="number">{{ total_cases }}</div>
+            </div>
+
+            <div class="card orange">
+                <div class="card-label">Pending Cases</div>
+                <div class="number">{{ pending_cases }}</div>
+            </div>
+
+            <div class="card purple">
+                <div class="card-label">In Progress</div>
+                <div class="number">{{ in_progress_cases }}</div>
+            </div>
+
+            <div class="card green">
+                <div class="card-label">Closed Cases</div>
+                <div class="number">{{ closed_cases }}</div>
+            </div>
+        </section>
+
+        <section class="table-card">
+            <h2 class="section-title">Recent Cases</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Case Number</th>
+                        <th>Case Title</th>
+                        <th>Client</th>
+                        <th>Lawyer</th>
+                        <th>Status</th>
+                        
+<th>Judge</th>
+<th>Next Hearing</th>
+<th>Courtroom</th>
+<th>Case History</th>
+
+
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for case in recent_cases %}
+                    <tr>
+                        <td class="case-no">{{ case.case_number }}</td>
+                        <td>{{ case.title }}</td>
+                        <td>{{ case.client_name }}</td>
+                        <td>{{ case.lawyer_name }}</td>
+                        <td>
+                            {% if case.status == 'Pending' %}
+                                <span class="status status-pending">Pending</span>
+                            {% elif case.status == 'In Progress' %}
+                                <span class="status status-progress">In Progress</span>
+                            {% else %}
+                                <span class="status status-closed">Closed</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+    <a href="{{ url_for('case_history', case_id=case.case_id) }}"
+       style="display:inline-block; padding:8px 12px;
+              background:#4338ca; color:white;
+              border-radius:6px; text-decoration:none;">
+        🕘 View History
+    </a>
+</td>
+                        
+<td>{{ case.judge_name or 'Not assigned' }}</td>
+<td>
+    {% if case.hearing_date %}
+        {{ case.hearing_date.strftime('%d %b %Y') }}
+        {% if case.hearing_time %}
+            at {{ case.hearing_time }}
+        {% endif %}
+    {% else %}
+        Not scheduled
+    {% endif %}
+</td>
+<td>{{ case.court_room or 'Not assigned' }}</td>
+
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="empty">No cases found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+</div>
+</body>
+</html>

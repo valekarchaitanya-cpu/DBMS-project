@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtEase - Clients</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            margin: 0;
+            padding: 30px;
+            color: #202b45;
+        }
+        h1 { color: #172442; }
+        a {
+            color: #3156a3;
+            text-decoration: none;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e5e8ef;
+        }
+        th { background: #f0f3f9; }
+    </style>
+</head>
+<body>
+    <a href="/">← Back to Dashboard</a>
+    <h1>Clients</h1>
+    <p>View all registered clients in CourtEase.</p>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                <tr>
+                    <td>{{ client.client_id }}</td>
+                    <td>{{ client.full_name }}</td>
+                    <td>{{ client.phone }}</td>
+                    <td>{{ client.email }}</td>
+                    <td>{{ client.address }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">No clients found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

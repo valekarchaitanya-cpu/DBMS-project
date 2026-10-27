@@ -1,0 +1,152 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtEase | Submit a Case</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f6fb;
+            color: #202943;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        header a { color: white; text-decoration: none; }
+
+        main {
+            max-width: 760px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 5px 25px rgba(0,0,0,.06);
+        }
+
+        h1 { margin-top: 0; font-size: 28px; }
+        .intro { color: #64748b; line-height: 1.6; }
+
+        label {
+            display: block;
+            margin: 20px 0 8px;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font: inherit;
+        }
+
+        textarea { min-height: 150px; resize: vertical; }
+
+        button {
+            margin-top: 24px;
+            background: #1d4ed8;
+            color: white;
+            padding: 13px 20px;
+            border: 0;
+            border-radius: 8px;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover { background: #1e40af; }
+
+        .flash {
+            background: #fff7ed;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .note { color: #64748b; font-size: 13px; margin-top: 15px; }
+    </style>
+</head>
+
+<body>
+<header>
+    <a href="{{ url_for('home') }}"><strong>⚖ CourtEase</strong></a>
+    <a href="{{ url_for('home') }}">← Back to Dashboard</a>
+</header>
+
+<main>
+    <section class="card">
+        <h1>Submit a Case Application</h1>
+        <p class="intro">
+            Enter the details of your case application. Your submission
+            will be saved for review by authorized court staff.
+            Submission does not mean the case has been officially accepted.
+        </p>
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('submit_case') }}">
+            <label for="application_title">Application Title</label>
+            <input
+                type="text"
+                id="application_title"
+                name="application_title"
+                maxlength="200"
+                required
+            >
+
+            <label for="case_type">Case Type</label>
+            <select id="case_type" name="case_type" required>
+                <option value="">Select case type</option>
+                <option value="Civil">Civil</option>
+                <option value="Criminal">Criminal</option>
+                <option value="Family">Family</option>
+                <option value="Property">Property</option>
+                <option value="Consumer">Consumer</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="description">Case Description</label>
+            <textarea
+                id="description"
+                name="description"
+                maxlength="5000"
+                placeholder="Describe the matter and relevant details..."
+                required
+            ></textarea>
+
+            <button type="submit">Submit Application</button>
+        </form>
+
+        <p class="note">
+            Your application will be associated with your logged-in
+            client account. Do not include unnecessary sensitive information.
+        </p>
+    </section>
+</main>
+</body>
+</html>
+

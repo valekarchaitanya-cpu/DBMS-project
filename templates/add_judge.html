@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Judge | CourtEase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 30px;
+        }
+        .container {
+            max-width: 750px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #0001;
+        }
+        h1 { color: #312e81; }
+        input, button {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+        }
+        button {
+            background: #4338ca;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 25px; }
+        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #ddd; }
+        th { background: #eef2ff; }
+        a { color: #4338ca; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Add Judge</h1>
+    <p>Register a judge in the CourtEase database.</p>
+
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div style="padding:10px; margin:10px 0;
+                background:#f3f4f6; border-radius:8px;">
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+    <form method="POST">
+        <label>Full Name *</label>
+        <input name="full_name" maxlength="100" required>
+
+        <label>Court Name *</label>
+        <input name="court_name" maxlength="150" required>
+
+        <label>Designation</label>
+        <input name="designation" maxlength="100"
+               placeholder="e.g. District Judge">
+
+        <button type="submit">Save Judge</button>
+    </form>
+
+    <h2>Registered Judges</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th><th>Name</th><th>Court</th><th>Designation</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for judge in judges %}
+            <tr>
+                <td>{{ judge.judge_id }}</td>
+                <td>{{ judge.full_name }}</td>
+                <td>{{ judge.court_name }}</td>
+                <td>{{ judge.designation or '-' }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4">No judges found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <p><a href="{{ url_for('home') }}">← Back to Dashboard</a></p>
+</div>
+</body>
+</html>

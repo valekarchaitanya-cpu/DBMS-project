@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtEase - Case Audit History</title>
+</head>
+<body>
+    <h1>CourtEase - Case Audit History</h1>
+
+    <h2>Current Case</h2>
+    <p><strong>Case Number:</strong> {{ case.case_number }}</p>
+    <p><strong>Current Status:</strong> {{ case.status }}</p>
+
+    <h2>Audit Records</h2>
+
+    {% if logs %}
+        <table border="1" cellpadding="8">
+            <tr>
+                <th>Audit ID</th>
+                <th>Field</th>
+                <th>Old Value</th>
+                <th>New Value</th>
+                <th>Date and Time</th>
+            </tr>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.audit_id }}</td>
+                <td>{{ log.field_name }}</td>
+                <td>{{ log.old_value or '—' }}</td>
+                <td>{{ log.new_value or '—' }}</td>
+                <td>{{ log.changed_at }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No audit records yet.</p>
+    {% endif %}
+
+    <p><a href="{{ url_for('home') }}">Back to Dashboard</a></p>
+</body>
+</html>
